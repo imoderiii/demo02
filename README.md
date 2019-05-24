@@ -4,15 +4,28 @@
 springboot-flowable  快速开发工作流
 
 #### 软件架构
-springboot + flowable
+springboot + flowable + modeler + idm
+
+springboot version : 2.1.5
+
+flowable version : 6.4.0
+
+==注意:== 版本需于数据库 act_ge_property 相同 
 
 
 #### 使用说明
 
 1. 将flowable的依赖加入到POM中即可,flowable使用需要一个数据库，这里为了方便我选择mysql
+2. 2019年5月24日 11:33:02 增加 mybatis, modeler,idm 等配置
 
 ~~~xml
-<dependencies>
+ <properties>
+        <java.version>1.8</java.version>
+        <flowable.version>6.4.0</flowable.version>
+        <mybatis-spring-boot>1.3.1</mybatis-spring-boot>
+    </properties>
+
+    <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -20,31 +33,152 @@ springboot + flowable
         <!--flowable工作流依赖-->
         <dependency>
             <groupId>org.flowable</groupId>
-            <artifactId>flowable-spring-boot-starter</artifactId>
-            <version>6.3.0</version>
+            <artifactId>flowable-spring-boot-starter-basic</artifactId>
+            <version>${flowable.version}</version>
         </dependency>
         <!--mysql依赖-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.45</version>
+            <version>8.0.11</version>
+        </dependency>
+
+        <!-- Spring Boot Mybatis 依赖 -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis-spring-boot}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.31</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.46</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-ui-common</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-ui-modeler-rest</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-idm-spring-configurator</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-ui-idm-rest</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-ui-idm-conf</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.6.2</version>
+        </dependency>
+
+        <!--security -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <!-- Servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 ~~~
 
 
 
 2.yml 文件配置
 
+​	2019年5月24日 11:35:11 增加: idm, modeler , mybatis , servlet 等配置
+
 ~~~yml
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/flowable-spring-boot?characterEncoding=UTF-8
+    url: jdbc:mysql://127.0.0.1:3306/flowable?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=CTT
     username: root
-    password: root
+    password: 123456
+  security:
+    filter:
+      dispatcher-types: REQUEST,FORWARD,ASYNC
 flowable:
-#关闭定时任务JOB
+  #关闭定时任务JOB
   async-executor-activate: false
+  common:
+    app:
+      idm-url: http://localhost:8080/expense/
+  idm:
+    app:
+      admin:
+        user-id: admin
+        password: test
+        first-name: admin
+        last-name: admin
+  rest:
+    app:
+      authentication-mode: verify-privilege
+  modeler:
+    app:
+      rest-enabled: true
+  database-schema-update: true
+mybatis:
+  mapper-locations: classpath:/META-INF/modeler-mybatis-mappings/*.xml
+  config-location: classpath:/META-INF/mybatis-config.xml
+  configuration-properties:
+    prefix:
+    blobType: BLOB
+    boolValue: TRUE
+server:
+  servlet:
+    context-path: /expense
+
 ~~~
 
 这样操作后，flowable与springBoot的整个就完成了！
@@ -420,6 +554,98 @@ public class FlowableConfig implements EngineConfigurationConfigurer<SpringProce
 访问: http://localhost:8080/expense/processDiagram?processId=2501
 
 ![](assets/return_process_img.png)
+
+
+
+
+
+#### 流程设计器 modeler
+
+解压 idm, modeler war包  导入两个war中的 static 包下的文件
+
+![](assets/idm和modeler的静态文件.png)
+
+
+
+#### 重写两个配置类
+AppDispatcherServletConfiguration.java
+ApplicationConfiguration
+springboot 启动类 import 两个配置类
+
+~~~java
+![说明](assets/说明.png)@Import({
+        ApplicationConfiguration.class,
+        AppDispatcherServletConfiguration.class
+})
+@ComponentScan(basePackages = {"com.example.demo"})
+@EnableTransactionManagement
+@SpringBootApplication
+public class DemoApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+
+}
+~~~
+
+
+
+![](assets/说明.png)
+
+#### 添加国际化文件
+
+![](assets/国际化文件.png)
+
+
+
+#### 资源文件配置
+
+~~~yml
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/flowable?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=CTT
+    username: root
+    password: 123456
+  security:
+    filter:
+      dispatcher-types: REQUEST,FORWARD,ASYNC
+flowable:
+  #关闭定时任务JOB
+  async-executor-activate: false
+  common:
+    app:
+      idm-url: http://localhost:8080/expense/
+  idm:
+    app:
+      admin:
+        user-id: admin
+        password: test
+        first-name: admin
+        last-name: admin
+  rest:
+    app:
+      authentication-mode: verify-privilege
+  modeler:
+    app:
+      rest-enabled: true
+  database-schema-update: true
+mybatis:
+  mapper-locations: classpath:/META-INF/modeler-mybatis-mappings/*.xml
+  config-location: classpath:/META-INF/mybatis-config.xml
+  configuration-properties:
+    prefix:
+    blobType: BLOB
+    boolValue: TRUE
+server:
+  servlet:
+    context-path: /expense
+
+~~~
+
+
+
+
 
 
 
