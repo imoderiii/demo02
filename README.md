@@ -16,7 +16,7 @@ flowable version : 6.4.0
 #### 使用说明
 
 1. 将flowable的依赖加入到POM中即可,flowable使用需要一个数据库，这里为了方便我选择mysql
-2. 2019年5月24日 11:33:02 增加 mybatis, modeler,idm 等配置
+2. 增加 mybatis, modeler,idm 等配置
 
 ~~~xml
  <properties>
@@ -137,7 +137,7 @@ flowable version : 6.4.0
 
 2.yml 文件配置
 
-​	2019年5月24日 11:35:11 增加: idm, modeler , mybatis , servlet 等配置
+增加: idm, modeler , mybatis , servlet 等配置
 
 ~~~yml
 spring:
