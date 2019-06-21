@@ -12,6 +12,13 @@ flowable version : 6.4.0
 
 ==注意:== 版本需于数据库 act_ge_property 相同 
 
+​		需要先登录 http://127.0.0.1:8080/expense/idm/index.html
+
+​		account: admin
+
+​		pwd : test
+​	 再访问:  <http://127.0.0.1:8080/expense> 创建设计器
+
 
 #### 使用说明
 
