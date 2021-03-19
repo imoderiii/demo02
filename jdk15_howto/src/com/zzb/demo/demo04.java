@@ -1,4 +1,4 @@
-package com.zzb.deno;
+package com.zzb.demo;
 
 public class demo04 {
     public static void main(String[] args) {
