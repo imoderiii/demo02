@@ -362,7 +362,6 @@ public class BossTaskHandler implements TaskListener {
 
 ~~~java
 @Controller
-@RequestMapping(value = "expense")
 public class ExpenseController {
     @Autowired
     private RuntimeService runtimeService;
@@ -532,7 +531,7 @@ public class FlowableConfig implements EngineConfigurationConfigurer<SpringProce
 
 1.先启动好此项目，然后创建一个流程：
 
-访问：http://localhost:8080/expense/expense/add?userId=123&money=123321
+访问：http://localhost:8080/expense/add?userId=123&money=123321
 
 返回：提交成功.流程Id为：2501
 
@@ -540,7 +539,7 @@ public class FlowableConfig implements EngineConfigurationConfigurer<SpringProce
 
 2.查询待办列表:
 
-访问：http://localhost:8080/expense/expense/list?userId=123
+访问：http://localhost:8080/expense/list?userId=123
 
 输出：Task[id=2507, name=出差报销]
 
@@ -550,7 +549,7 @@ public class FlowableConfig implements EngineConfigurationConfigurer<SpringProce
 
 ​	==注意 : 带的是taskid==
 
-访问：http://localhost:8080/expense/expense/apply?taskId=2507
+访问：http://localhost:8080/expense/apply?taskId=2507
 
 返回：processed ok!
 
@@ -558,7 +557,7 @@ public class FlowableConfig implements EngineConfigurationConfigurer<SpringProce
 
 4.生成流程图：
 
-访问: http://localhost:8080/expense/expense/processDiagram?processId=2501
+访问: http://localhost:8080/expense/processDiagram?processId=2501
 
 ![](assets/return_process_img.png)
 
