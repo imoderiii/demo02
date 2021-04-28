@@ -555,7 +555,7 @@ public class FlowableConfig implements EngineConfigurationConfigurer<SpringProce
 
  
 
-4.生成流程图：
+4.生成流程图： 
 
 访问: http://localhost:8080/expense/processDiagram?processId=2501
 
